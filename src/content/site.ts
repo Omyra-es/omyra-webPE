@@ -44,3 +44,9 @@ export const hubspot = {
   formId: 'a18c31d2-a5aa-46a0-a8ea-9c0f17253cc3' as string | null, // «Solicitud de demo · Web»
   endpoint: 'https://api-eu1.hsforms.com/submissions/v3/integration/submit',
 };
+
+// Calendly de Perú (cuenta propia, distinta de la de España): enlace público del evento «Omyra Demo».
+// Mientras sea null, la página de contacto muestra solo el formulario.
+export const calendly = {
+  url: 'https://calendly.com/reuniones-omyra-qnly/30min' as string | null,
+};
