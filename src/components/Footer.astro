@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
       </nav>
     </div>
     <div class="ftr__bottom">
-      <p>© {year} Omyra · {pricing.launch}: {pricing.price} {pricing.period}, {pricing.tax}</p>
+      <p>© {year} Omyra · {pricing.launchShort}: {pricing.price} {pricing.period}, {pricing.tax}</p>
       <ul role="list">{legal.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
     </div>
   </div>

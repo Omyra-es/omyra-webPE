@@ -4,7 +4,7 @@ export type Faq = { q: string; a: string };
 
 export const faq: Record<string, Faq> = {
   negocios: { q: '¿Para qué negocios es Omyra?', a: 'Para negocios que trabajan con citas: centros de estética, peluquerías, spas y centros de bienestar, fisioterapia, masajes, estudios de tatuaje, cuidado de mascotas y otros servicios que trabajan con citas. Te enseñamos en la demo cómo encaja con tu forma de trabajar.' },
-  precio: { q: '¿Cuánto cuesta?', a: `${pricing.full}. Un único plan con todas las funcionalidades, profesionales ilimitados y sin permanencia.` },
+  precio: { q: '¿Cuánto cuesta?', a: `${pricing.full}. Un único plan con todas las funcionalidades, profesionales ilimitados y sin permanencia. Después, ${pricing.regularPrice} ${pricing.period}; quien se suscriba antes del ${pricing.launchUntil} mantiene ${pricing.price} mientras siga suscrito.` },
   marketplace: { q: '¿Omyra es un marketplace?', a: 'No. Omyra no es un directorio donde los clientes comparan negocios. Cada negocio tiene su propia página de reservas, con su logo, sus colores y sus servicios, y la comparte en sus canales: Instagram, WhatsApp, Google o su web.' },
   comisiones: { q: '¿Cobran comisión por reserva o por pago?', a: 'No. Omyra no cobra comisiones por reserva ni por pago. Si activas el pago con tarjeta online, la pasarela de pago aplica sus propias tarifas por cada cobro.' },
   movil: { q: '¿Funciona en el celular?', a: 'Sí. Desde el celular consultas tu agenda, revisas tus clientes y recibes avisos de nuevas reservas. Funciona desde el navegador y puedes añadirla a la pantalla de inicio. La configuración completa del negocio se hace desde una computadora.' },

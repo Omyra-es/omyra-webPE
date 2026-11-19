@@ -7,12 +7,25 @@ export const pricing = {
   tax: 'IGV incluido',
   period: 'al mes',
   launch: 'Precio de lanzamiento',
+  // Fin del lanzamiento y precio después. Quien se suscribe antes mantiene el de lanzamiento.
+  launchUntil: '31/01/2027',
+  launchUntilISO: '2027-01-31',
+  regularAmount: '59.90',
+  get regularPrice() {
+    return `${this.currency}\u00a0${this.regularAmount}`; // espacio que no se parte: «S/» nunca queda solo al final de una línea
+  },
+  get launchShort() {
+    return `${this.launch} hasta el ${this.launchUntil}`;
+  },
+  get launchTerms() {
+    return `${this.launchShort}. Después, ${this.regularPrice} ${this.period}, ${this.tax}. Quien se suscriba antes mantiene ${this.price} mientras siga suscrito.`;
+  },
   // Precio con moneda delante, como se escribe en Perú: «S/ 39.90»
   get price() {
-    return `${this.currency} ${this.amount}`;
+    return `${this.currency}\u00a0${this.amount}`;
   },
   get full() {
-    return `${this.price} ${this.period}, ${this.tax} (${this.launch.toLowerCase()})`;
+    return `${this.price} ${this.period}, ${this.tax} (${this.launch.toLowerCase()} hasta el ${this.launchUntil})`;
   },
   included: [
     'Todas las funcionalidades',

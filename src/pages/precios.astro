@@ -16,9 +16,10 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEnti
   <PageHero eyebrow="Precios" title="Un precio. <span class='gold'>Todo incluido.</span>" lead="Sin planes que comparar ni funciones que desbloquear. Una sola cuota mensual para todo tu negocio.">
     <div class="pcard reveal">
       <p class="eyebrow">Plan único</p>
-      <p class="sticker pcard__launch">✦ {pricing.launch}</p>
+      <p class="sticker pcard__launch">✦ {pricing.launchShort}</p>
       <p class="pcard__big"><sup>S/</sup>{pricing.amount}</p>
       <p class="pcard__per">{pricing.period}, {pricing.tax}</p>
+      <p class="pcard__terms">Después, {pricing.regularPrice} {pricing.period}. Si te suscribes antes, mantienes {pricing.price} mientras sigas suscrito.</p>
       <ul class="ring-list">{pricing.included.slice(0, 5).map((i) => <li>{i}</li>)}</ul>
       <Button href={cta.demo.href} size="lg" arrow class="pcard__btn">{cta.demo.label}</Button>
     </div>
@@ -49,10 +50,12 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEnti
 </Base>
 <style>
   .pcard { background: var(--cream-l); color: var(--green); border-radius: var(--r-xl); padding: clamp(1.8rem, 1rem + 3vw, 3rem); box-shadow: var(--shadow); display: grid; gap: 1rem; --eyebrow: var(--gold-ink); --rule: var(--line); }
-  .pcard__launch { justify-self: start; width: fit-content; background: var(--lilac); color: var(--deep); font-size: .85rem; padding: .6em 1em; rotate: -2deg; margin: .2rem 0 .6rem; }
+  .pcard__launch { justify-self: start; width: fit-content; max-width: 100%; background: var(--lilac); color: var(--deep); font-size: .85rem; padding: .6em 1em; rotate: -2deg; margin: .2rem 0 .6rem; }
+  @media (max-width: 480px) { .pcard { min-width: 0; } .pcard__launch { white-space: normal; text-wrap: balance; font-size: .8rem; line-height: 1.3; } }
   .pcard__big { font-size: clamp(5rem, 3rem + 7vw, 9rem); line-height: .85; letter-spacing: -.07em; font-weight: 600; }
   .pcard__big sup { margin-right: .14em; letter-spacing: .01em; font-size: .3em; color: var(--gold-ink); vertical-align: top; position: relative; top: .2em; }
   .pcard__per { color: var(--muted); font-size: 1.15rem; }
+  .pcard__terms { color: var(--muted); font-size: .9rem; margin-top: .4rem; max-width: 30em; }
   .pcard :global(.pcard__btn) { margin-top: .5rem; }
   .incl { display: grid; grid-template-columns: 1fr 1fr; column-gap: 2rem; }
   .nope { background: var(--green); color: var(--cream-l); border-radius: var(--r-xl); padding: clamp(1.8rem, 1rem + 3vw, 3rem); --eyebrow: var(--gold); }

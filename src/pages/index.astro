@@ -51,10 +51,10 @@ import agendaMovil from '../assets/producto/movil-agenda-dia.png';
 import fichaMovil from '../assets/producto/movil-cliente-ficha.png';
 
 const faqs = pick('negocios', 'precio', 'marketplace', 'comisiones', 'pagos', 'whatsapp');
-const description = 'Omyra es el software de reservas online y gestión de citas para negocios que trabajan con citas: tu propia página de reservas, agenda del equipo, clientes, pagos, bonos y promociones. Precio de lanzamiento: S/ 39.90 al mes, IGV incluido.';
+const description = `Omyra es el software de reservas online y gestión de citas para negocios que trabajan con citas: tu propia página de reservas, agenda del equipo, clientes, pagos, bonos y promociones. ${pricing.launch}: ${pricing.price} ${pricing.period}, ${pricing.tax}, hasta el ${pricing.launchUntil}.`;
 const jsonld = [
   { '@context': 'https://schema.org', '@type': 'Organization', name: 'Omyra', url: site.url, email: site.contact.email, ...(site.contact.phone ? { telephone: site.contact.phone } : {}), address: { '@type': 'PostalAddress', addressCountry: 'PE' } },
-  { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Omyra', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', description, offers: { '@type': 'Offer', price: pricing.amountNumber.toFixed(2), priceCurrency: pricing.currencyCode, priceSpecification: { '@type': 'UnitPriceSpecification', price: pricing.amountNumber.toFixed(2), priceCurrency: pricing.currencyCode, valueAddedTaxIncluded: true, unitText: 'MONTH' } } },
+  { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Omyra', applicationCategory: 'BusinessApplication', operatingSystem: 'Web', description, offers: { '@type': 'Offer', price: pricing.amountNumber.toFixed(2), priceCurrency: pricing.currencyCode, priceValidUntil: pricing.launchUntilISO, priceSpecification: { '@type': 'UnitPriceSpecification', price: pricing.amountNumber.toFixed(2), priceCurrency: pricing.currencyCode, valueAddedTaxIncluded: true, unitText: 'MONTH' } } },
   { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
 ];
 const problems = [
@@ -81,7 +81,7 @@ const problems = [
           <Button href={cta.discover.href} variant="ghost" size="lg" class="btn--block-sm">{cta.discover.label}</Button>
         </div>
         <ul class="hero__trust" role="list">
-          <li>{pricing.launch}: <b>{pricing.price}</b> {pricing.period}, {pricing.tax}</li><li>Sin permanencia</li><li>Sin comisiones por reserva</li><li>Profesionales ilimitados sin costo adicional</li>
+          <li>{pricing.launchShort}: <b>{pricing.price}</b> {pricing.period}, {pricing.tax}</li><li>Sin permanencia</li><li>Sin comisiones por reserva</li><li>Profesionales ilimitados sin costo adicional</li>
         </ul>
       </div>
       <HeroReel />
@@ -443,10 +443,10 @@ const problems = [
   <section class="sec bg-green is-dark price" id="precio">
     <div class="wrap">
       <p class="eyebrow reveal">Un único plan · {pricing.period}, {pricing.tax}</p>
-      <p class="sticker price__launch reveal">✦ {pricing.launch}</p>
+      <p class="sticker price__launch reveal">✦ {pricing.launchShort}</p>
       <p class="price__big reveal" aria-label={`${pricing.amount} soles ${pricing.period}, ${pricing.tax}`}><sup>S/</sup>{pricing.amount}</p>
       <ul class="price__chips" role="list">{pricing.included.map((i, k) => <li class="reveal" style={`--d:${k * 0.04}s`}>{i}</li>)}</ul>
-      <p class="price__note">{pricing.thirdParty}</p>
+      <p class="price__note">{pricing.launchTerms} {pricing.thirdParty}</p>
       <div class="price__ctas mt-3"><Button href={cta.demo.href} size="lg" arrow>{cta.demo.label}</Button><a href="/precios" class="price__more">Ver todos los detalles →</a></div>
     </div>
   </section>
@@ -630,7 +630,8 @@ const problems = [
 
   /* PRECIO · cifra gigante */
   .price { overflow: hidden; }
-  .price__launch { background: var(--lilac); color: var(--deep); margin-top: 1.4rem; rotate: -2deg; }
+  .price__launch { background: var(--lilac); color: var(--deep); margin-top: 1.4rem; rotate: -2deg; max-width: 100%; }
+  @media (max-width: 480px) { .price__launch { white-space: normal; text-wrap: balance; font-size: .84rem; line-height: 1.3; } }
   .price__big { font-size: clamp(5.5rem, 2rem + 24vw, 25rem); line-height: .76; padding-bottom: .2em; letter-spacing: -.08em; font-weight: 600; color: var(--lime); white-space: nowrap; margin-top: 1.5rem; }
   .price__big sup { font-size: .24em; letter-spacing: .01em; color: var(--cream-l); vertical-align: top; position: relative; top: .3em; margin-right: .14em; }
   .price__chips { list-style: none; display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.4rem; position: relative; z-index: 1; }

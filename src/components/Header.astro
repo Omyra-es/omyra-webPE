@@ -26,7 +26,7 @@ const path = Astro.url.pathname.replace(/\.html$/, '');
       <a href="/">Inicio</a>
       {nav.map((n) => <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>)}
       <div class="menu__foot">
-        <p>{pricing.launch}: <b class="gold">{pricing.price}</b> {pricing.period}, {pricing.tax} · Sin permanencia</p>
+        <p>{pricing.launchShort}: <b class="gold">{pricing.price}</b> {pricing.period}, {pricing.tax} · Sin permanencia</p>
         <Button href={cta.demo.href} variant="gold" size="lg" arrow>{cta.demo.label}</Button>
         {site.contact.phoneHref ? <a class="menu__tel" href={site.contact.phoneHref}>{site.contact.phone}</a> : <a class="menu__tel" href={`mailto:${site.contact.email}`}>{site.contact.email}</a>}
       </div>
