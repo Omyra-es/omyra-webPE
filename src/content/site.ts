@@ -80,6 +80,8 @@ export const signup = {
 // Altas a medias: mismo formulario de HubSpot que España («Alta iniciada · Web»), con country = «Perú»
 // para separar los contactos (si el formulario rechazara «country», se reenvía sin él; la página omyra.pe lo identifica).
 export const hubspotSignup = {
-  formId: '11190f17-b3bb-4dd9-b24f-fee44d58cd8b' as string | null,
+  formId: '11190f17-b3bb-4dd9-b24f-fee44d58cd8b' as string | null, // «Alta iniciada · Web» (compartido con España): pasos a medias
+  // «Solicitud de alta · Perú»: solo la solicitud enviada (paso 5). Avisa por correo a Jenniffer desde HubSpot.
+  requestFormId: 'cc325309-9132-4f91-81cc-8f7423bbe4b1' as string | null,
   country: 'Perú',
 };

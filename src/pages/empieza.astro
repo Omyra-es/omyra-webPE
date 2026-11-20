@@ -17,6 +17,7 @@ const cfg = {
   payLink: signup.paymentLink && /^https:\/\//.test(signup.paymentLink) ? signup.paymentLink : null,
   emailParam: signup.paymentEmailParam,
   hs: hubspot.portalId && hubspotSignup.formId ? `${hubspot.endpoint}/${hubspot.portalId}/${hubspotSignup.formId}` : null,
+  hsRequest: hubspot.portalId && hubspotSignup.requestFormId ? `${hubspot.endpoint}/${hubspot.portalId}/${hubspotSignup.requestFormId}` : null,
   country: hubspotSignup.country,
   email: site.contact.email,
   online,
@@ -159,7 +160,7 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
 <script>
   import { validators, normalize, isValidRuc } from '../scripts/alta-validate';
 
-  type Cfg = { termsVersion: string; plan: string; payLink: string | null; emailParam: string | null; hs: string | null; country: string; email: string; online: boolean };
+  type Cfg = { termsVersion: string; plan: string; payLink: string | null; emailParam: string | null; hs: string | null; hsRequest: string | null; country: string; email: string; online: boolean };
   const cfg: Cfg = JSON.parse(document.getElementById('alta-cfg')!.textContent || '{}');
   const form = document.getElementById('alta') as HTMLFormElement;
   const steps = [...form.querySelectorAll<HTMLFieldSetElement>('[data-step]')];
@@ -337,11 +338,20 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
       ['phone', phone ? `+51${phone}` : ''], ['company', valueOf('businessName')],
       ['paso_del_alta', `${reached} · ${STEP_NAMES[reached]}`], ['origen_del_alta', origin],
     ].filter(([, v]) => v).map(([name, value]) => ({ name, value }));
-    const send = (extra: { name: string; value: string }[]) => fetch(cfg.hs!, {
+    // La solicitud enviada va a su propio formulario (aviso por correo); los pasos a medias, al compartido.
+    const url = reached === 5 && cfg.hsRequest ? cfg.hsRequest : cfg.hs!;
+    const send = (extra: { name: string; value: string }[]) => fetch(url, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
       body: JSON.stringify({ fields: [...fields, ...extra], context: { pageUri: location.href.split('?')[0], pageName: 'Omyra Perú · Alta online' } }),
     });
-    send([{ name: 'country', value: cfg.country }])
+    // Datos del negocio en propiedades estándar de HubSpot (el portal no tiene hueco para propiedades nuevas):
+    // Sector → industry, Ciudad → city, profesionales → message. Si HubSpot rechaza algo, se reenvía lo básico.
+    const team = valueOf('teamSize');
+    const extra = [
+      ['country', cfg.country], ['industry', valueOf('sector')], ['city', valueOf('city')],
+      ['message', team ? `Profesionales que atienden: ${team}` : ''],
+    ].filter(([, v]) => v).map(([name, value]) => ({ name, value }));
+    send(extra)
       .then((r) => { if (r.status === 400) return send([]); })
       .catch(() => { /* no bloquea el alta */ });
   }
