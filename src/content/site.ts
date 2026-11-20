@@ -37,8 +37,7 @@ export const legal = [
   { label: 'Aviso legal', href: '/aviso-legal' },
   { label: 'Privacidad', href: '/privacidad' },
   { label: 'Cookies', href: '/cookies' },
-  { label: 'Condiciones de contratación', href: '/condiciones-de-contratacion' },
-  { label: 'Encargo del tratamiento', href: '/encargo-del-tratamiento' },
+  // Condiciones de contratación y encargo del tratamiento: borradores en docs/borradores-legales, se publican con el pago online.
 ];
 
 // Formulario de demo: mismo portal y formulario de HubSpot que España.
@@ -69,6 +68,8 @@ export const signup = {
   paymentLink: null as string | null,
   // Nombre de la pasarela para el texto de seguridad del paso 4. null = texto genérico.
   paymentProvider: 'Culqi' as string | null,
+  // Mientras no haya pago online, /empieza funciona como solicitud de alta y avisa desde cuándo se podrá pagar online.
+  onlineFrom: '01/02/2027',
   // Parámetro de la URL de pago para dejar el correo ya escrito, si la pasarela lo admite (p. ej. 'email'). null = no se añade.
   paymentEmailParam: null as string | null,
   // Después de pagar, la pasarela vuelve a https://omyra.pe/gracias; si cancela, a https://omyra.pe/empieza?pago=cancelado.

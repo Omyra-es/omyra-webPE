@@ -9,6 +9,8 @@ const sectors = ['Centro de estética', 'Peluquería', 'Salón de uñas', 'Pesta
 const teams = ['Solo yo', '2 a 5 personas', '6 a 10 personas', 'Más de 10'];
 const departments = ['Amazonas', 'Áncash', 'Apurímac', 'Arequipa', 'Ayacucho', 'Cajamarca', 'Callao', 'Cusco', 'Huancavelica', 'Huánuco', 'Ica', 'Junín', 'La Libertad', 'Lambayeque', 'Lima', 'Loreto', 'Madre de Dios', 'Moquegua', 'Pasco', 'Piura', 'Puno', 'San Martín', 'Tacna', 'Tumbes', 'Ucayali'];
 
+// Pago online activo solo con clave pública de Culqi y dirección de la app. Mientras no, el alta es una solicitud y contactamos al cliente.
+const online = Boolean(signup.culqiPublicKey && signup.endpoint);
 const cfg = {
   termsVersion: signup.termsVersion,
   plan: signup.plan,
@@ -17,8 +19,10 @@ const cfg = {
   hs: hubspot.portalId && hubspotSignup.formId ? `${hubspot.endpoint}/${hubspot.portalId}/${hubspotSignup.formId}` : null,
   country: hubspotSignup.country,
   email: site.contact.email,
+  online,
 };
 const provider = signup.paymentProvider ?? 'la pasarela de pago';
+const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y paga'] : ['Tu cuenta', 'Tu negocio', 'Revisa y envía'];
 ---
 <Base title="Empieza con Omyra · Alta online" description={`Date de alta en Omyra: ${pricing.full}, sin permanencia.`} noindex>
   <div class="shell bg-green is-dark">
@@ -32,11 +36,12 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
         <p class="eyebrow">Alta online · Sin permanencia</p>
         <h1 class="intro__h">Empieza con Omyra <span class="firma">hoy</span></h1>
         <p class="intro__lead">Tú trabajas, tus clientes reservan. Deja tu Omyra listo hoy y empieza a recibir reservas con tu marca, sin permanencia y sin comisiones por reserva.</p>
+        {!online && <p class="intro__soon"><span aria-hidden="true">✦</span> Por ahora, las altas las hacemos contigo: déjanos tus datos y te contactamos para activar tu Omyra. Desde el {signup.onlineFrom} podrás pagar online aquí mismo.</p>}
         <p class="intro__demo">¿Prefieres verlo antes? <a href={cta.demo.href}>Te lo enseñamos en una demo →</a><br />¿Dudas? Escríbenos a <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>.</p>
       </div>
 
       <ol class="steps" aria-label="Pasos del alta">
-        {['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y paga'].map((s, i) => (
+        {stepNames.map((s, i) => (
           <li data-dot={i + 1}><span class="steps__n">Paso {i + 1}</span><span class="steps__l">{s}</span></li>
         ))}
       </ol>
@@ -46,9 +51,9 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
       <form id="alta" novalidate>
         <div class="hp" aria-hidden="true"><label for="f-website">No llenes este campo</label><input id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>
 
-        <fieldset class="card" data-step="1">
+        <fieldset class="card" data-step="1" data-key="1">
           <legend class="card__h">Tu cuenta</legend>
-          <p class="card__sub">Con estos datos creamos tu acceso a Omyra. Después del pago te enviamos tus accesos a este correo y lo primero que harás será elegir tu contraseña.</p>
+          <p class="card__sub">{online ? 'Con estos datos creamos tu acceso a Omyra. Después del pago te enviamos tus accesos a este correo y lo primero que harás será elegir tu contraseña.' : 'Con estos datos preparamos tu acceso a Omyra. Te contactamos para activarlo y te enviamos tus accesos a este correo.'}</p>
           <div class="f2">
             <div class="field"><label for="f-firstName">Nombre</label><input id="f-firstName" name="firstName" autocomplete="given-name" required /><p class="err" id="e-firstName"></p></div>
             <div class="field"><label for="f-lastName">Apellidos</label><input id="f-lastName" name="lastName" autocomplete="family-name" required /><p class="err" id="e-lastName"></p></div>
@@ -61,7 +66,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
           <p class="small">Al continuar guardamos estos datos para poder ayudarte si no terminas el alta. Solo te escribiremos sobre tu alta en Omyra. <a href="/privacidad">Privacidad</a>.</p>
         </fieldset>
 
-        <fieldset class="card" data-step="2" hidden>
+        <fieldset class="card" data-step="2" data-key="2" hidden>
           <legend class="card__h">Tu negocio</legend>
           <div class="field"><label for="f-businessName">Nombre del negocio</label><input id="f-businessName" name="businessName" autocomplete="organization" required aria-describedby="h-businessName" /><span class="hint" id="h-businessName">Es el nombre que verán tus clientes al reservar.</span><p class="err" id="e-businessName"></p></div>
           <div class="field" role="radiogroup" aria-labelledby="l-sector"><span class="lbl" id="l-sector">Sector</span>
@@ -74,7 +79,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
           <div class="actions"><button type="button" class="back" data-back>← Atrás</button><button type="button" class="next" data-next>Continuar <span aria-hidden="true">→</span></button></div>
         </fieldset>
 
-        <fieldset class="card" data-step="3" hidden>
+        {online && <fieldset class="card" data-step="3" data-key="3" hidden>
           <legend class="card__h">Comprobante de pago</legend>
           <p class="card__sub">Para emitir cada mes tu comprobante electrónico de Omyra.</p>
           <div class="field" role="radiogroup" aria-labelledby="l-docType"><span class="lbl" id="l-docType">¿Qué comprobante necesitas?</span>
@@ -94,30 +99,32 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
             <div class="field"><label for="f-district">Distrito</label><input id="f-district" name="district" autocomplete="address-level3" required /><p class="err" id="e-district"></p></div>
           </div>
           <div class="actions"><button type="button" class="back" data-back>← Atrás</button><button type="button" class="next" data-next>Continuar <span aria-hidden="true">→</span></button></div>
-        </fieldset>
+        </fieldset>}
 
-        <fieldset class="card" data-step="4" hidden>
-          <legend class="card__h">Revisa y paga</legend>
+        <fieldset class="card card--review" data-step={online ? 4 : 3} data-key="4" hidden>
+          <legend class="card__h">{online ? 'Revisa y paga' : 'Revisa y envía'}</legend>
           <div class="review">
             <div class="rv"><h3>Tu cuenta</h3><p id="rv-1"></p><button type="button" data-goto="1">Cambiar</button></div>
             <div class="rv"><h3>Tu negocio</h3><p id="rv-2"></p><button type="button" data-goto="2">Cambiar</button></div>
-            <div class="rv"><h3>Comprobante</h3><p id="rv-3"></p><button type="button" data-goto="3">Cambiar</button></div>
+            {online && <div class="rv"><h3>Comprobante</h3><p id="rv-3"></p><button type="button" data-goto="3">Cambiar</button></div>}
           </div>
           <div class="guide"><span class="guide__star" aria-hidden="true">✦</span><p><b>Lo dejas listo tú, paso a paso.</b> Al entrar, Omyra te guía para configurar tu página de reservas, tu horario, tus servicios y tu equipo. Es muy sencillo.<br /><span class="guide__help">¿Te surge alguna duda? Escríbenos a <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>.</span></p></div>
-          <div class="field field--check"><input id="f-terms" name="terms" type="checkbox" required /><label for="f-terms">He leído y acepto las <a href="/condiciones-de-contratacion" target="_blank">condiciones de contratación</a> y el <a href="/encargo-del-tratamiento" target="_blank">encargo del tratamiento</a>, y la <a href="/privacidad" target="_blank">política de privacidad</a>.</label><p class="err" id="e-terms"></p></div>
-          <div class="secure"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>El pago lo procesa <b>{provider}</b> de forma segura. Los datos de tu tarjeta van directo a {provider}: Omyra no los ve ni los guarda.</span></div>
-          <div class="actions"><button type="button" class="back" data-back>← Atrás</button><button type="submit" class="next pay" id="pay">Ir al pago · {pricing.price} <span aria-hidden="true">→</span></button></div>
-          <p class="small"><b>Protección de datos.</b> Titular del banco de datos: Magda Isabel Chaname Altamirano (Omyra). Finalidad: crear tu cuenta, cobrar la suscripción y emitir tu comprobante. Destinatarios: HubSpot, nuestra herramienta de contactos (servidores en la Unión Europea), y {provider}, que procesa el pago. Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición escribiendo a <a href={`mailto:${site.contact.legalEmail}`}>{site.contact.legalEmail}</a>. Más información en la <a href="/privacidad">política de privacidad</a>.</p>
+          <div class="field field--check"><input id="f-terms" name="terms" type="checkbox" required />{online
+            ? <label for="f-terms">He leído y acepto las <a href="/condiciones-de-contratacion" target="_blank">condiciones de contratación</a> y el <a href="/encargo-del-tratamiento" target="_blank">encargo del tratamiento</a>, y la <a href="/privacidad" target="_blank">política de privacidad</a>.</label>
+            : <label for="f-terms">He leído la <a href="/privacidad" target="_blank">política de privacidad</a> y acepto que Omyra use estos datos para contactarme y activar mi alta.</label>}<p class="err" id="e-terms"></p></div>
+          {online && <div class="secure"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>El pago lo procesa <b>{provider}</b> de forma segura. Los datos de tu tarjeta van directo a {provider}: Omyra no los ve ni los guarda.</span></div>}
+          <div class="actions"><button type="button" class="back" data-back>← Atrás</button><button type="submit" class="next pay" id="pay">{online ? <>Ir al pago · {pricing.price}</> : 'Solicitar mi alta'} <span aria-hidden="true">→</span></button></div>
+          <p class="small"><b>Protección de datos.</b> Titular del banco de datos: Magda Isabel Chaname Altamirano (Omyra). Finalidad: {online ? 'crear tu cuenta, cobrar la suscripción y emitir tu comprobante' : 'contactarte para activar tu alta en Omyra'}. Destinatarios: HubSpot, nuestra herramienta de contactos (servidores en la Unión Europea){online ? `, y ${provider}, que procesa el pago` : ''}. Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición escribiendo a <a href={`mailto:${site.contact.legalEmail}`}>{site.contact.legalEmail}</a>. Más información en la <a href="/privacidad">política de privacidad</a>.</p>
         </fieldset>
       </form>
 
       <section class="card done" id="done" hidden aria-live="polite">
         <span class="done__star" aria-hidden="true">✦</span>
-        <h2 class="card__h" id="doneTitle" tabindex="-1">¡Ya casi está!</h2>
-        <p class="done__lead">Tus datos ya nos llegaron. Te escribimos a <b id="doneEmail"></b> para completar el pago de forma segura y activar tu Omyra.</p>
+        <h2 class="card__h" id="doneTitle" tabindex="-1">¡Listo!</h2>
+        <p class="done__lead">Recibimos tu solicitud de alta. Te escribimos a <b id="doneEmail"></b> para activar tu Omyra y darte tus accesos.</p>
         <ul class="done__list" role="list">
-          <li>No se te ha cobrado nada todavía.</li>
-          <li>Mantienes el {pricing.launch.toLowerCase()}: {pricing.price} {pricing.period}, {pricing.tax}.</li>
+          <li>Si te das de alta antes del {pricing.launchUntil}, mantienes {pricing.price} {pricing.period}, {pricing.tax}, mientras sigas suscrito.</li>
+          <li>Por ahora las altas las hacemos contigo. Desde el {signup.onlineFrom} podrás pagar online aquí mismo.</li>
           <li>¿Prefieres adelantarte? Escríbenos a <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>.</li>
         </ul>
         <div class="actions"><button type="button" class="back" id="doneBack">← Revisar mis datos</button></div>
@@ -129,15 +136,15 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
       <p class="sum__price"><span class="sum__num">{pricing.price}</span><span class="sum__per">{pricing.period}<br />{pricing.tax}</span></p>
       <p class="sum__launch">✦ {pricing.launchShort}</p>
       <div class="sum__today">
-        <div class="date" aria-hidden="true"><span class="date__m" id="dM"></span><span class="date__d" id="dD"></span></div>
+        {online && <div class="date" aria-hidden="true"><span class="date__m" id="dM"></span><span class="date__d" id="dD"></span></div>}
         <div class="sum__rows">
           <div><span>Plan mensual</span><span>{pricing.price}</span></div>
           <div><span>IGV</span><span>Incluido</span></div>
-          <div class="sum__tot"><span>Hoy</span><span>{pricing.price}</span></div>
+          <div class="sum__tot"><span>{online ? 'Hoy' : 'Al mes'}</span><span>{pricing.price}</span></div>
         </div>
       </div>
       <ul class="sum__list" role="list">
-        <li id="dNext">Se renueva cada mes, el mismo día</li>
+        <li id="dNext">{online ? 'Se renueva cada mes, el mismo día' : 'Se renueva cada mes, el mismo día en que se activa'}</li>
         <li>Si te suscribes antes del {pricing.launchUntil}, mantienes {pricing.price} mientras sigas suscrito. Después, {pricing.regularPrice} {pricing.period}.</li>
         <li>Sin permanencia: cancelas cuando quieras</li>
         <li>Todas las funcionalidades, profesionales ilimitados y sin comisiones de Omyra</li>
@@ -152,7 +159,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
 <script>
   import { validators, normalize, isValidRuc } from '../scripts/alta-validate';
 
-  type Cfg = { termsVersion: string; plan: string; payLink: string | null; emailParam: string | null; hs: string | null; country: string; email: string };
+  type Cfg = { termsVersion: string; plan: string; payLink: string | null; emailParam: string | null; hs: string | null; country: string; email: string; online: boolean };
   const cfg: Cfg = JSON.parse(document.getElementById('alta-cfg')!.textContent || '{}');
   const form = document.getElementById('alta') as HTMLFormElement;
   const steps = [...form.querySelectorAll<HTMLFieldSetElement>('[data-step]')];
@@ -162,12 +169,14 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
   const done = document.getElementById('done')!;
   const KEY = 'omyra-alta';
   let step = 1;
+  const N = steps.length; // 4 con pago online; 3 (sin comprobante) mientras el alta es una solicitud
+  const keyOf = (n: number) => Number(steps[n - 1]?.dataset.key || n); // paso «canónico» para HubSpot
 
   // ---------- Fecha del cobro ----------
   const now = new Date();
-  document.getElementById('dM')!.textContent = now.toLocaleDateString('es-PE', { month: 'short' }).replace('.', '').toUpperCase();
-  document.getElementById('dD')!.textContent = String(now.getDate());
-  if (now.getDate() <= 28) document.getElementById('dNext')!.textContent = `Se renueva el día ${now.getDate()} de cada mes`;
+  const dM = document.getElementById('dM'), dD = document.getElementById('dD');
+  if (dM && dD) { dM.textContent = now.toLocaleDateString('es-PE', { month: 'short' }).replace('.', '').toUpperCase(); dD.textContent = String(now.getDate()); }
+  if (cfg.online && now.getDate() <= 28) document.getElementById('dNext')!.textContent = `Se renueva el día ${now.getDate()} de cada mes`;
 
   // ---------- Resumen en celular ----------
   const miniBtn = document.getElementById('miniBtn')!;
@@ -189,6 +198,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
 
   // Factura (RUC) o boleta (DNI): cambian las etiquetas del documento y del nombre.
   function syncDocType() {
+    if (!document.getElementById('f-docNumber')) return; // sin paso de comprobante (alta por solicitud)
     const boleta = valueOf('docType') === 'boleta';
     document.getElementById('l-docNumber')!.textContent = boleta ? 'DNI' : 'RUC';
     document.getElementById('l-legalName')!.textContent = boleta ? 'Nombre completo' : 'Razón social';
@@ -243,7 +253,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
   // ---------- Guardado en el navegador (solo durante la visita) ----------
   function save() {
     const data: Record<string, string> = {};
-    for (let n = 1; n <= 4; n++) names(n).forEach((nm) => { if (nm !== 'terms') data[nm] = valueOf(nm); });
+    for (let n = 1; n <= N; n++) names(n).forEach((nm) => { if (nm !== 'terms') data[nm] = valueOf(nm); });
     try { sessionStorage.setItem(KEY, JSON.stringify({ data, step })); } catch { /* sin almacenamiento */ }
   }
   function restore() {
@@ -255,7 +265,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
         if (!el || !v) continue;
         el.value = v;
       }
-      return Math.min(4, Math.max(1, Number(saved.step) || 1));
+      return Math.min(N, Math.max(1, Number(saved.step) || 1));
     } catch { return 1; }
   }
 
@@ -269,14 +279,14 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
       d.dataset.s = i + 1 < n ? 'done' : i + 1 === n ? 'now' : '';
       if (i + 1 === n) d.setAttribute('aria-current', 'step'); else d.removeAttribute('aria-current');
     });
-    if (n === 4) fillReview();
+    if (n === N) fillReview();
     save();
     if (focus) document.querySelector('.steps')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   form.querySelectorAll('[data-next]').forEach((b) => b.addEventListener('click', () => {
     if (!checkStep(step)) return;
     clearNote();
-    track(step + 1);
+    track(keyOf(step + 1));
     go(step + 1);
   }));
   form.querySelectorAll('[data-back]').forEach((b) => b.addEventListener('click', () => go(step - 1)));
@@ -289,7 +299,8 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
     const doc = v('docType') === 'boleta' ? `Boleta · DNI ${normalize.doc(v('docNumber'))}` : `Factura · RUC ${normalize.doc(v('docNumber'))}`;
     document.getElementById('rv-1')!.innerHTML = esc(`${v('firstName')} ${v('lastName')} · ${normalize.email(v('email'))} · ${fmtPhone(normalize.phone(v('phone')))}`);
     document.getElementById('rv-2')!.innerHTML = esc(`${v('businessName')} · ${v('sector')} · ${v('teamSize')} · ${v('city')}`);
-    document.getElementById('rv-3')!.innerHTML = `${esc(`${doc} · ${v('legalName')}`)}<br>${esc(`${v('address')}, ${v('district')}, ${v('province')} (${v('department')})`)}`;
+    const rv3 = document.getElementById('rv-3');
+    if (rv3) rv3.innerHTML = `${esc(`${doc} · ${v('legalName')}`)}<br>${esc(`${v('address')}, ${v('district')}, ${v('province')} (${v('department')})`)}`;
   }
 
   // ---------- Avisos ----------
@@ -342,18 +353,18 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
     clearNote();
     document.getElementById('doneEmail')!.textContent = normalize.email(valueOf('email'));
     const first = valueOf('firstName');
-    document.getElementById('doneTitle')!.textContent = first ? `¡Ya casi está, ${first}!` : '¡Ya casi está!';
+    document.getElementById('doneTitle')!.textContent = first ? `¡Listo, ${first}!` : '¡Listo!';
     dots.forEach((d) => { d.dataset.s = 'done'; d.removeAttribute('aria-current'); });
     document.querySelector('.steps')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     (document.getElementById('doneTitle') as HTMLElement).focus({ preventScroll: true });
   }
-  document.getElementById('doneBack')!.addEventListener('click', () => go(4));
+  document.getElementById('doneBack')!.addEventListener('click', () => go(N));
 
   const payLabel = pay.innerHTML;
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (pay.disabled) return;
-    for (let n = 1; n <= 3; n++) if (!names(n).every((nm) => !validators[nm]?.(valueOf(nm), valueOf))) { go(n); checkStep(n); showNote('campos'); return; }
+    for (let n = 1; n < N; n++) if (!names(n).every((nm) => !validators[nm]?.(valueOf(nm), valueOf))) { go(n); checkStep(n); showNote('campos'); return; }
     if (!check('terms')) { focusField('terms'); return; }
     if (valueOf('website')) return; // robot
     track(5);
@@ -371,7 +382,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
   syncDocType();
   const params = new URLSearchParams(location.search);
   if (params.get('pago') === 'cancelado') {
-    go(4, false);
+    go(N, false);
     showNote('cancelado');
   } else go(start, false);
   // Si vuelve con datos guardados, marca de nuevo lo que ya estaba mal.
@@ -391,6 +402,8 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
   .firma { font-weight: 300; letter-spacing: -.04em; color: var(--lime); }
   .firma::after { content: '✦'; display: inline-block; font-size: .4em; font-weight: 400; color: var(--brand-gold); vertical-align: 1.15em; margin-left: .14em; }
   .intro__lead { color: var(--on-dark); margin-top: .8rem; max-width: 54ch; font-size: 1.05rem; }
+  .intro__soon { margin-top: .9rem; display: flex; gap: .6rem; align-items: flex-start; max-width: 58ch; background: rgb(247 245 241 / .08); border-radius: 16px; padding: .8rem 1rem; color: var(--cream-l); font-size: .95rem; }
+  .intro__soon span { color: var(--brand-gold); }
   .intro__demo { margin-top: .6rem; font-size: .95rem; color: var(--on-dark); }
   .intro__demo a { color: var(--lime); font-weight: 600; }
 
@@ -446,7 +459,7 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
   .pay:disabled { opacity: .6; cursor: wait; transform: none; }
   .small { font-size: .8rem; color: var(--muted); line-height: 1.5; }
   .small a { color: var(--green); }
-  [data-step='4'] .small { border-top: 1px solid var(--line); padding-top: .9rem; }
+  .card--review .small { border-top: 1px solid var(--line); padding-top: .9rem; }
 
   .review { display: grid; gap: .6rem; clear: both; }
   .rv { border: 1.5px solid var(--line); border-radius: 18px; padding: .9rem 1.1rem; display: grid; grid-template-columns: 1fr auto; gap: .2rem 1rem; font-size: .94rem; }

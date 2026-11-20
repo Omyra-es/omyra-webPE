@@ -57,5 +57,5 @@ export const validators: Record<string, (v: string, all?: (n: string) => string)
   department: req('Elige el departamento.'),
   province: req('Escribe la provincia.'),
   district: req('Escribe el distrito.'),
-  terms: req('Para continuar, acepta las condiciones de contratación, el encargo del tratamiento y la política de privacidad.'),
+  terms: req('Para continuar, marca la casilla de aceptación.'),
 };
