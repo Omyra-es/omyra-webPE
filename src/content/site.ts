@@ -60,12 +60,15 @@ export const calendly = {
 export const signup = {
   termsVersion: '2026-11-pe',
   plan: 'omyra-mensual-pe',
-  // Pasarela de pago (pendiente de elegir). Enlace PÚBLICO de pago o suscripción de la pasarela, sin claves.
-  // Mientras sea null, «Ir al pago» guarda el alta en HubSpot como «5 · Ir al pago» y muestra
-  // «Te contactamos para completar el pago» con el correo de ventas.
+  // Pasarela elegida: Culqi Online (formulario de tarjeta de Culqi dentro de omyra.pe + suscripción creada por la app).
+  // Contrato con la app: docs/alta-online-peru.md. Mientras culqiPublicKey o endpoint sean null, «Ir al pago» guarda
+  // el alta en HubSpot como «5 · Ir al pago» y muestra «Te contactamos para completar el pago» con el correo de ventas.
+  culqiPublicKey: null as string | null, // clave PÚBLICA de Culqi (pk_test_… o pk_live_…). La secreta (sk_…) NUNCA va aquí.
+  endpoint: null as string | null, // dirección de la app que recibe el alta y el token de Culqi (la programa Sergio)
+  // Alternativa sin programar (no se usa con Culqi Online): enlace público de pago de una pasarela.
   paymentLink: null as string | null,
-  // Nombre de la pasarela para el texto de seguridad del paso 4 (p. ej. 'Mercado Pago'). null = texto genérico.
-  paymentProvider: null as string | null,
+  // Nombre de la pasarela para el texto de seguridad del paso 4. null = texto genérico.
+  paymentProvider: 'Culqi' as string | null,
   // Parámetro de la URL de pago para dejar el correo ya escrito, si la pasarela lo admite (p. ej. 'email'). null = no se añade.
   paymentEmailParam: null as string | null,
   // Después de pagar, la pasarela vuelve a https://omyra.pe/gracias; si cancela, a https://omyra.pe/empieza?pago=cancelado.
