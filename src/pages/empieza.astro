@@ -316,7 +316,8 @@ const provider = signup.paymentProvider ?? 'la pasarela de pago';
   // ---------- Altas a medias (HubSpot, con país Perú) ----------
   const STEP_NAMES = ['', 'Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y paga', 'Ir al pago'];
   function track(reached: number) {
-    if (!cfg.hs || valueOf('website')) return;
+    // Solo desde omyra.pe: las pruebas en local o en vistas previas no crean contactos en HubSpot.
+    if (!cfg.hs || valueOf('website') || !/(^|\.)omyra\.pe$/.test(location.hostname)) return;
     const src = source();
     const origin = [src.utm_source, src.utm_medium, src.utm_campaign, src.utm_content, src.ref && `ref:${src.ref}`, src.referrer].filter(Boolean).join(' · ') || 'directo';
     const phone = normalize.phone(valueOf('phone'));

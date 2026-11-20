@@ -45,7 +45,7 @@ const cfg = {
   if (data.firstName) document.getElementById('tyName')!.textContent = `¡Gracias, ${data.firstName}`;
   if (data.email) document.getElementById('tyEmail')!.textContent = data.email.trim().toLowerCase();
 
-  if (cfg.hs && data.email) {
+  if (cfg.hs && data.email && /(^|\.)omyra\.pe$/.test(location.hostname)) { // solo desde omyra.pe
     const send = (extra: { name: string; value: string }[]) => fetch(cfg.hs!, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
       body: JSON.stringify({ fields: [{ name: 'email', value: data.email.trim().toLowerCase() }, { name: 'paso_del_alta', value: '6 · Pagado' }, ...extra], context: { pageUri: location.origin + location.pathname, pageName: 'Omyra Perú · Alta completada' } }),
