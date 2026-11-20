@@ -120,15 +120,23 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
       </form>
 
       <section class="card done" id="done" hidden aria-live="polite">
-        <span class="done__star" aria-hidden="true">✦</span>
-        <h2 class="card__h" id="doneTitle" tabindex="-1">¡Listo!</h2>
-        <p class="done__lead">Recibimos tu solicitud de alta. Te escribimos a <b id="doneEmail"></b> para activar tu Omyra y darte tus accesos.</p>
-        <ul class="done__list" role="list">
-          <li>Si te das de alta antes del {pricing.launchUntil}, mantienes {pricing.price} {pricing.period}, {pricing.tax}, mientras sigas suscrito.</li>
-          <li>Por ahora las altas las hacemos contigo. Desde el {signup.onlineFrom} podrás pagar online aquí mismo.</li>
-          <li>¿Prefieres adelantarte? Escríbenos a <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>.</li>
-        </ul>
-        <div class="actions"><button type="button" class="back" id="doneBack">← Revisar mis datos</button></div>
+        <div class="done__top">
+          <p class="done__eyebrow">✦ Solicitud recibida</p>
+          <h2 class="done__h" id="doneTitle" tabindex="-1">¡Listo!</h2>
+          <p class="done__big">Estás a un solo paso de tener tu&nbsp;Omyra.</p>
+          <p class="done__lead">Te escribimos a <b id="doneEmail"></b> para activar tu cuenta.</p>
+        </div>
+        <ol class="road" role="list">
+          <li class="road__i is-done"><span class="road__n" aria-hidden="true">✓</span><div><p class="road__t">Enviaste tu solicitud</p><p class="road__s">Ya tenemos los datos de tu negocio.</p></div></li>
+          <li class="road__i is-next"><span class="road__n" aria-hidden="true">2</span><div><p class="road__t">Te contactamos <span class="road__tag">Siguiente</span></p><p class="road__s">Confirmamos tus datos, te pedimos tu RUC o DNI para el comprobante y te indicamos cómo pagar.</p></div></li>
+          <li class="road__i"><span class="road__n" aria-hidden="true">3</span><div><p class="road__t">Pagas tu primer mes</p><p class="road__s">{pricing.price} {pricing.period}, {pricing.tax}. Sin permanencia.</p></div></li>
+          <li class="road__i"><span class="road__n" aria-hidden="true">✦</span><div><p class="road__t">Se activa tu cuenta</p><p class="road__s">Te llegan tus accesos al correo y Omyra te guía para dejar lista tu agenda.</p></div></li>
+        </ol>
+        <p class="done__price"><span aria-hidden="true">✦</span><span>Si te das de alta antes del {pricing.launchUntil}, mantienes {pricing.price} {pricing.period} mientras sigas suscrito. Desde el {signup.onlineFrom} también podrás pagar online aquí mismo.</span></p>
+        <div class="done__foot">
+          <p>¿Prefieres adelantarte? Escríbenos a <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
+          <button type="button" class="back" id="doneBack">← Revisar mis datos</button>
+        </div>
       </section>
     </section>
 
@@ -491,15 +499,29 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   /* «Te contactamos para completar el pago» (mientras no haya pasarela) */
-  .done { position: relative; overflow: hidden; }
-  .done__star { position: absolute; right: 1.2rem; top: .4rem; font-size: 4.5rem; line-height: 1; color: rgb(184 150 85 / .25); }
-  .done__lead { font-size: 1.08rem; color: var(--ink); clear: both; max-width: 46ch; }
-  .done__lead b { color: var(--green); overflow-wrap: anywhere; }
-  .done__list { list-style: none; display: grid; gap: .6rem; font-size: .95rem; }
-  .done__list li { display: grid; grid-template-columns: 1rem 1fr; gap: .55rem; color: var(--muted); }
-  .done__list li::before { content: '✦'; color: var(--brand-gold); font-size: .8em; margin-top: .22em; }
-  .done__list a { color: var(--green); font-weight: 600; }
-  .done .back { margin-right: auto; }
+  .done { position: relative; overflow: hidden; padding: 0; gap: 0; }
+  .done__top { position: relative; background: radial-gradient(120% 120% at 100% 0%, var(--green-2) 0%, var(--green) 55%, var(--deep) 100%); color: var(--cream-l); padding: clamp(1.5rem, 1rem + 2.5vw, 2.6rem); display: grid; gap: .55rem; }
+  .done__top::after { content: '✦'; position: absolute; right: -.6rem; top: -2.2rem; font-size: 10rem; line-height: 1; color: rgb(184 150 85 / .14); pointer-events: none; }
+  .done__eyebrow { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); font-weight: 600; }
+  .done__h { font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.2rem); line-height: 1; letter-spacing: -.045em; font-weight: 600; color: var(--cream-l); overflow-wrap: anywhere; outline: none; }
+  .done__big { font-size: clamp(1.25rem, 1.05rem + .9vw, 1.6rem); line-height: 1.2; letter-spacing: -.02em; color: var(--lime); font-weight: 500; max-width: 24ch; text-wrap: balance; }
+  .done__lead { color: var(--on-dark); max-width: 46ch; }
+  .done__lead b { color: var(--cream-l); overflow-wrap: anywhere; }
+  .road { list-style: none; display: grid; gap: 0; padding: clamp(1.3rem, 1rem + 1.5vw, 2.1rem) clamp(1.3rem, 1rem + 1.5vw, 2.3rem) .4rem; }
+  .road__i { position: relative; display: grid; grid-template-columns: 38px 1fr; gap: .9rem; padding-bottom: 1.2rem; }
+  .road__i:not(:last-child)::before { content: ''; position: absolute; left: 18px; top: 40px; bottom: 2px; width: 2px; background: var(--line); }
+  .road__i.is-done::before { background: var(--green); }
+  .road__n { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; font-weight: 600; font-size: .95rem; background: var(--cream); color: var(--muted); border: 1px solid var(--line); }
+  .road__i.is-done .road__n { background: var(--green); color: var(--lime); border-color: var(--green); }
+  .road__i.is-next .road__n { background: var(--lime); color: var(--deep); border-color: var(--lime); rotate: -6deg; }
+  .road__i:last-child .road__n { color: var(--brand-gold); }
+  .road__t { font-weight: 600; color: var(--green); letter-spacing: -.01em; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .45rem; }
+  .road__tag { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; background: var(--lilac); color: var(--deep); border-radius: 99px; padding: .2rem .55rem; }
+  .road__s { color: var(--muted); font-size: .95rem; margin-top: .2rem; max-width: 52ch; }
+  .done__price { margin: 0 clamp(1.3rem, 1rem + 1.5vw, 2.3rem); display: grid; grid-template-columns: auto 1fr; gap: .6rem; background: var(--cream); border-radius: 16px; padding: .9rem 1rem; font-size: .93rem; color: var(--ink); }
+  .done__price > span:first-child { color: var(--brand-gold); }
+  .done__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem 1.5rem; padding: 1.2rem clamp(1.3rem, 1rem + 1.5vw, 2.3rem) clamp(1.3rem, 1rem + 1.5vw, 2rem); font-size: .95rem; color: var(--muted); }
+  .done__foot a { color: var(--green); font-weight: 600; overflow-wrap: anywhere; }
 
   /* Resumen: mismo precio que en toda la web; el cobro de hoy, como una cita */
   .sum { position: sticky; top: calc(var(--header-h) + 20px); background: var(--cream-l); color: var(--green); border-radius: 30px; padding: 28px; display: grid; gap: 1.1rem; box-shadow: var(--shadow); --eyebrow: var(--green); }
