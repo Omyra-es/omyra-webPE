@@ -352,13 +352,12 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
       method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
       body: JSON.stringify({ fields: [...fields, ...extra], context: { pageUri: location.href.split('?')[0], pageName: 'Omyra Perú · Alta online' } }),
     });
-    // Datos del negocio en propiedades estándar de HubSpot (el portal no tiene hueco para propiedades nuevas):
-    // Sector → industry, Ciudad → city, profesionales → message. Si HubSpot rechaza algo, se reenvía lo básico.
+    // Datos del negocio: el formulario de HubSpot solo tiene «Ciudad», así que ahí van ciudad, sector y profesionales
+    // (p. ej. «Surco · Barbería · Profesionales: Solo yo»). Si HubSpot rechaza algo, se reenvía lo básico.
     const team = valueOf('teamSize');
-    const extra = [
-      ['country', cfg.country], ['industry', valueOf('sector')], ['city', valueOf('city')],
-      ['message', team ? `Profesionales que atienden: ${team}` : ''],
-    ].filter(([, v]) => v).map(([name, value]) => ({ name, value }));
+    const city = [valueOf('city'), valueOf('sector'), team && `Profesionales: ${team}`].filter(Boolean).join(' · ');
+    const extra = [['country', cfg.country], ['city', city]]
+      .filter(([, v]) => v).map(([name, value]) => ({ name, value }));
     send(extra)
       .then((r) => { if (r.status === 400) return send([]); })
       .catch(() => { /* no bloquea el alta */ });
