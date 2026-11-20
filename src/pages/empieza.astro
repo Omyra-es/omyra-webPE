@@ -51,8 +51,8 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
       <form id="alta" novalidate>
         <div class="hp" aria-hidden="true"><label for="f-website">No llenes este campo</label><input id="f-website" name="website" tabindex="-1" autocomplete="off" /></div>
 
-        <fieldset class="card" data-step="1" data-key="1">
-          <legend class="card__h">Tu cuenta</legend>
+        <fieldset class="card" data-step="1" data-key="1" aria-labelledby="step-h1">
+          <h2 class="card__h" id="step-h1">Tu cuenta</h2>
           <p class="card__sub">{online ? 'Con estos datos creamos tu acceso a Omyra. Después del pago te enviamos tus accesos a este correo y lo primero que harás será elegir tu contraseña.' : 'Con estos datos preparamos tu acceso a Omyra. Te contactamos para activarlo y te enviamos tus accesos a este correo.'}</p>
           <div class="f2">
             <div class="field"><label for="f-firstName">Nombre</label><input id="f-firstName" name="firstName" autocomplete="given-name" required /><p class="err" id="e-firstName"></p></div>
@@ -66,8 +66,8 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
           <p class="small">Al continuar guardamos estos datos para poder ayudarte si no terminas el alta. Solo te escribiremos sobre tu alta en Omyra. <a href="/privacidad">Privacidad</a>.</p>
         </fieldset>
 
-        <fieldset class="card" data-step="2" data-key="2" hidden>
-          <legend class="card__h">Tu negocio</legend>
+        <fieldset class="card" data-step="2" data-key="2" aria-labelledby="step-h2" hidden>
+          <h2 class="card__h" id="step-h2">Tu negocio</h2>
           <div class="field"><label for="f-businessName">Nombre del negocio</label><input id="f-businessName" name="businessName" autocomplete="organization" required aria-describedby="h-businessName" /><span class="hint" id="h-businessName">Es el nombre que verán tus clientes al reservar.</span><p class="err" id="e-businessName"></p></div>
           <div class="field" role="radiogroup" aria-labelledby="l-sector"><span class="lbl" id="l-sector">Sector</span>
             <div class="chips">{sectors.map((s) => <label><input type="radio" name="sector" value={s} required />{s}</label>)}</div>
@@ -79,8 +79,8 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
           <div class="actions"><button type="button" class="back" data-back>← Atrás</button><button type="button" class="next" data-next>Continuar <span aria-hidden="true">→</span></button></div>
         </fieldset>
 
-        {online && <fieldset class="card" data-step="3" data-key="3" hidden>
-          <legend class="card__h">Comprobante de pago</legend>
+        {online && <fieldset class="card" data-step="3" data-key="3" aria-labelledby="step-h3" hidden>
+          <h2 class="card__h" id="step-h3">Comprobante de pago</h2>
           <p class="card__sub">Para emitir cada mes tu comprobante electrónico de Omyra.</p>
           <div class="field" role="radiogroup" aria-labelledby="l-docType"><span class="lbl" id="l-docType">¿Qué comprobante necesitas?</span>
             <div class="chips">
@@ -101,8 +101,8 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
           <div class="actions"><button type="button" class="back" data-back>← Atrás</button><button type="button" class="next" data-next>Continuar <span aria-hidden="true">→</span></button></div>
         </fieldset>}
 
-        <fieldset class="card card--review" data-step={online ? 4 : 3} data-key="4" hidden>
-          <legend class="card__h">{online ? 'Revisa y paga' : 'Revisa y envía'}</legend>
+        <fieldset class="card card--review" data-step={online ? 4 : 3} data-key="4" aria-labelledby="step-h4" hidden>
+          <h2 class="card__h" id="step-h4">{online ? 'Revisa y paga' : 'Revisa y envía'}</h2>
           <div class="review">
             <div class="rv"><h3>Tu cuenta</h3><p id="rv-1"></p><button type="button" data-goto="1">Cambiar</button></div>
             <div class="rv"><h3>Tu negocio</h3><p id="rv-2"></p><button type="button" data-goto="2">Cambiar</button></div>
@@ -425,7 +425,7 @@ const stepNames = online ? ['Tu cuenta', 'Tu negocio', 'Comprobante', 'Revisa y 
 
   .card { border: 0; background: #fff; border-radius: 28px; padding: clamp(1.3rem, 1rem + 1.5vw, 2.3rem); box-shadow: var(--shadow); display: grid; gap: 1.1rem; min-width: 0; color: var(--ink); --eyebrow: var(--green); }
   .card[hidden], form[hidden] { display: none; }
-  .card__h { font-size: 1.55rem; letter-spacing: -.03em; color: var(--green); font-weight: 600; line-height: 1.1; padding: 0; float: left; width: 100%; }
+  .card__h { font-size: 1.55rem; letter-spacing: -.03em; color: var(--green); font-weight: 600; line-height: 1.1; padding: 0; }
   .card__sub { color: var(--muted); font-size: .95rem; margin-top: -.5rem; clear: both; }
   .f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .f3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
