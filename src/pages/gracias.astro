@@ -1,0 +1,80 @@
+---
+// Vuelta de la pasarela tras pagar: https://omyra.pe/gracias
+// Da las gracias con la marca de Omyra y cuenta que los accesos llegan por correo.
+// Si algún día hay panel de clientes de Perú (signup.appWelcomeUrl), se puede añadir la redirección.
+import Base from '../layouts/Base.astro';
+import { site, hubspot, hubspotSignup } from '../content/site';
+
+const cfg = {
+  hs: hubspot.portalId && hubspotSignup.formId ? `${hubspot.endpoint}/${hubspot.portalId}/${hubspotSignup.formId}` : null,
+  country: hubspotSignup.country,
+};
+---
+<Base title="¡Gracias! · Omyra" description="Tu alta en Omyra se ha completado." noindex>
+  <div class="shell bg-green is-dark">
+    <section class="wrap ty">
+      <p class="eyebrow">Alta completada</p>
+      <h1 class="ty__h"><span id="tyName">¡Gracias</span><span class="firma">!</span></h1>
+      <p class="ty__lead">Tu pago se completó y tu Omyra ya se está preparando. Te damos la bienvenida a una agenda más ordenada.</p>
+
+      <div class="ty__card">
+        <div class="ty__icon" aria-hidden="true">✦</div>
+        <div>
+          <p class="ty__t">Revisa tu correo: ahí te llegan tus accesos</p>
+          <p class="ty__s">Te enviamos tus datos de acceso a <b id="tyEmail">el correo que registraste</b>. Al entrar, eliges tu contraseña y Omyra te guía paso a paso para dejar lista tu página de reservas, tus servicios y tu equipo.</p>
+        </div>
+        <ol class="ty__steps" role="list">
+          <li><b>1</b><span>Abre el correo de Omyra con tus accesos</span></li>
+          <li><b>2</b><span>Elige tu contraseña</span></li>
+          <li><b>3</b><span>Configura tu negocio y comparte tu página de reservas</span></li>
+        </ol>
+      </div>
+
+      <p class="ty__help">¿No te llegó el correo o tienes algún problema? Revisa también la carpeta de spam o escríbenos a <a href={`mailto:${site.contact.legalEmail}`}>{site.contact.legalEmail}</a> y lo resolvemos.</p>
+    </section>
+  </div>
+  <script is:inline type="application/json" id="ty-cfg" set:html={JSON.stringify(cfg)} />
+</Base>
+
+<script>
+  const cfg = JSON.parse(document.getElementById('ty-cfg')!.textContent || '{}') as { hs: string | null; country: string };
+
+  // Datos del alta que quedaron en el navegador (misma visita): nombre, correo y aviso a HubSpot.
+  let data: Record<string, string> = {};
+  try { data = JSON.parse(sessionStorage.getItem('omyra-alta') || '{}').data || {}; } catch { /* sin datos */ }
+  if (data.firstName) document.getElementById('tyName')!.textContent = `¡Gracias, ${data.firstName}`;
+  if (data.email) document.getElementById('tyEmail')!.textContent = data.email.trim().toLowerCase();
+
+  if (cfg.hs && data.email) {
+    const send = (extra: { name: string; value: string }[]) => fetch(cfg.hs!, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({ fields: [{ name: 'email', value: data.email.trim().toLowerCase() }, { name: 'paso_del_alta', value: '6 · Pagado' }, ...extra], context: { pageUri: location.origin + location.pathname, pageName: 'Omyra Perú · Alta completada' } }),
+    });
+    send([{ name: 'country', value: cfg.country }]).then((r) => { if (r.status === 400) return send([]); }).catch(() => {});
+  }
+  // El alta ya está hecha: no hace falta conservar el formulario lleno.
+  try { sessionStorage.removeItem('omyra-alta'); } catch { /* sin almacenamiento */ }
+</script>
+
+<style>
+  .shell { position: relative; overflow: hidden; padding-top: var(--header-h); min-height: 88vh; background: radial-gradient(110% 90% at 90% 0%, var(--green-2) 0%, var(--green) 45%, var(--deep) 100%); }
+  .shell::before { content: '✦'; position: absolute; right: -4rem; top: -6rem; font-size: 26rem; line-height: 1; color: rgb(184 150 85 / .07); pointer-events: none; }
+  .ty { position: relative; padding-block: clamp(3rem, 6vw, 6rem) 5rem; display: grid; gap: 1.3rem; max-width: 46rem; }
+  .ty__h { font-size: clamp(3rem, 1.6rem + 5vw, 6rem); line-height: .92; letter-spacing: -.055em; font-weight: 600; color: var(--cream-l); overflow-wrap: anywhere; }
+  .firma { font-weight: 300; color: var(--lime); }
+  .firma::after { content: '✦'; display: inline-block; font-size: .4em; font-weight: 400; color: var(--brand-gold); vertical-align: 1.15em; margin-left: .14em; }
+  .ty__lead { font-size: clamp(1.1rem, 1rem + .5vw, 1.35rem); color: var(--on-dark); max-width: 38ch; }
+  .ty__card { margin-top: .8rem; background: var(--cream-l); color: var(--ink); border-radius: 28px; padding: clamp(1.3rem, 1rem + 1.5vw, 2rem); box-shadow: var(--shadow); display: grid; grid-template-columns: auto 1fr; gap: 1.1rem 1.1rem; align-items: start; }
+  .ty__icon { width: 46px; height: 46px; border-radius: 14px; background: var(--green); color: var(--lime); display: grid; place-items: center; font-size: 1.3rem; }
+  @media (prefers-reduced-motion: no-preference) { .ty__icon { animation: ty-spin 3s linear infinite; } }
+  @keyframes ty-spin { to { rotate: 360deg; } }
+  .ty__t { font-size: 1.2rem; font-weight: 600; letter-spacing: -.02em; color: var(--green); }
+  .ty__s { color: var(--muted); font-size: .95rem; margin-top: .3rem; }
+  .ty__s b { color: var(--green); overflow-wrap: anywhere; }
+  .ty__steps { grid-column: 1 / -1; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: .7rem; }
+  .ty__steps li { display: grid; gap: .45rem; align-content: start; background: #fff; border-radius: 18px; padding: .9rem 1rem; font-size: .92rem; color: var(--ink); }
+  .ty__steps b { width: 30px; height: 30px; border-radius: 10px; rotate: -6deg; display: grid; place-items: center; background: var(--lilac); color: var(--deep); font-size: .9rem; }
+  .ty__help { color: var(--on-dark); font-size: .95rem; }
+  .ty__help a { color: var(--lime); font-weight: 600; }
+  @media (max-width: 640px) { .ty__steps { grid-template-columns: 1fr; } .ty__steps li { grid-template-columns: auto 1fr; align-items: center; } }
+</style>

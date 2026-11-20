@@ -1,0 +1,47 @@
+---
+// BORRADOR pendiente de revisión legal (Perú). No publicar sin la revisión del abogado.
+import Legal from '../layouts/Legal.astro';
+import { site } from '../content/site';
+---
+<Legal title="Encargo del tratamiento" description="Cómo trata Omyra, por encargo de cada negocio, los datos personales de sus clientes, según la Ley 29733." updated="20 de noviembre de 2026" noindex>
+  <div class="box draft"><p><b>Borrador pendiente de revisión legal.</b> Este texto está preparado para que lo revise un abogado en Perú antes de publicarlo. Los datos marcados como <mark>[PENDIENTE]</mark> no se han completado a propósito.</p></div>
+
+  <p>Este encargo forma parte de las <a href="/condiciones-de-contratacion">condiciones de contratación</a> de Omyra y regula cómo Omyra trata los datos personales de los clientes de tu negocio, de acuerdo con la Ley 29733, Ley de Protección de Datos Personales, y su reglamento, aprobado por el Decreto Supremo 016-2024-JUS.</p>
+
+  <h2>1. Quién es quién</h2>
+  <ul>
+    <li><b>Tu negocio</b> es el titular del banco de datos y el responsable del tratamiento de los datos de sus clientes: decide qué datos recoge, para qué y durante cuánto tiempo.</li>
+    <li><b>Omyra</b> (Magda Isabel Chaname Altamirano, RUC <mark>[PENDIENTE]</mark>) es el encargado del tratamiento: trata esos datos solo para prestarte el servicio y siguiendo tus instrucciones.</li>
+  </ul>
+
+  <h2>2. Qué datos y para qué</h2>
+  <p>Los datos que tu negocio y sus clientes registran en Omyra: nombre, datos de contacto, citas, historial, notas, documentos y consentimientos firmados, cobros y mensajes. Omyra los trata solo para gestionar tu agenda, tus reservas, tus clientes y tus comunicaciones con ellos, durante el tiempo que dure el servicio.</p>
+
+  <h2>3. Qué se compromete a hacer Omyra</h2>
+  <ul>
+    <li>Tratar los datos solo según tus instrucciones y para prestarte el servicio. No usarlos para fines propios, no venderlos y no compartirlos con terceros, salvo con los proveedores del punto 4 o cuando lo exija la ley.</li>
+    <li>Guardar confidencialidad, y exigirla a las personas que acceden a los datos.</li>
+    <li>Aplicar medidas de seguridad técnicas, organizativas y legales adecuadas, como el cifrado de las comunicaciones y el control de accesos.</li>
+    <li>Ayudarte a atender las solicitudes de tus clientes para ejercer sus derechos de información, acceso, rectificación, cancelación y oposición.</li>
+    <li>Avisarte sin demora si detecta un incidente de seguridad que afecte a tus datos, con la información disponible para que puedas actuar. <mark>[PENDIENTE: plazo de aviso]</mark></li>
+    <li>Al terminar el servicio, devolverte o suprimir los datos según nos indiques, salvo que una ley obligue a conservarlos.</li>
+  </ul>
+
+  <h2>4. Proveedores que ayudan a prestar el servicio</h2>
+  <p>Omyra se apoya en proveedores de infraestructura, alojamiento, correo electrónico y notificaciones, con contrato y garantías de seguridad y confidencialidad. Algunos de ellos tratan los datos fuera del Perú, lo que constituye un flujo transfronterizo de datos. <mark>[PENDIENTE: lista de proveedores y países]</mark></p>
+  <p>Las funciones que conectan con terceros solo funcionan si tu negocio las activa (por ejemplo, la pasarela de pago con tarjeta online, Meta para WhatsApp Business o Google Calendar). En esos casos, el tercero trata los datos según sus propias condiciones con tu negocio.</p>
+
+  <h2>5. Qué te corresponde a ti</h2>
+  <ul>
+    <li>Informar a tus clientes y obtener su consentimiento cuando la ley lo exija.</li>
+    <li>Cumplir tus propias obligaciones como titular del banco de datos, incluida, cuando corresponda, su inscripción en el Registro Nacional de Protección de Datos Personales.</li>
+    <li>Darnos instrucciones lícitas y usar Omyra conforme a la ley.</li>
+  </ul>
+
+  <h2>6. Contacto</h2>
+  <p>Para cualquier cuestión sobre este encargo, escríbenos a <a href={`mailto:${site.contact.legalEmail}`}>{site.contact.legalEmail}</a>.</p>
+</Legal>
+<style>
+  .draft { border-left-color: var(--brand-gold) !important; }
+  :global(.legal mark) { background: rgb(215 243 107 / .55); padding: 0 .2em; border-radius: 4px; }
+</style>

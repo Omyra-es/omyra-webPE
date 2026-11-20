@@ -1,0 +1,64 @@
+---
+// BORRADOR pendiente de revisión legal (Perú). No publicar sin la revisión del abogado.
+import Legal from '../layouts/Legal.astro';
+import { site } from '../content/site';
+import { pricing } from '../content/pricing';
+---
+<Legal title="Condiciones de contratación" description="Condiciones para contratar Omyra en Perú: suscripción mensual, precio, pago, comprobantes, cancelación y datos." updated="20 de noviembre de 2026" noindex>
+  <div class="box draft"><p><b>Borrador pendiente de revisión legal.</b> Este texto está preparado para que lo revise un abogado en Perú antes de publicarlo. Los datos marcados como <mark>[PENDIENTE]</mark> no se han completado a propósito.</p></div>
+
+  <h2>1. Quién presta el servicio</h2>
+  <ul>
+    <li><b>Titular:</b> Magda Isabel Chaname Altamirano, persona natural con negocio que presta sus servicios con el nombre comercial Omyra.</li>
+    <li><b>RUC:</b> <mark>[PENDIENTE]</mark></li>
+    <li><b>Domicilio:</b> {site.contact.location}. <mark>[PENDIENTE: confirmar si se publica la dirección fiscal completa]</mark></li>
+    <li><b>Contacto:</b> <a href={`mailto:${site.contact.legalEmail}`}>{site.contact.legalEmail}</a></li>
+  </ul>
+
+  <h2>2. Qué se contrata</h2>
+  <p>Omyra es un software de reservas online y gestión de citas, en la nube, para negocios que trabajan con citas. Al contratar recibes una cuenta para tu negocio con todas las funcionalidades disponibles en ese momento y profesionales ilimitados. Omyra no es un marketplace: cada negocio tiene su propia página de reservas.</p>
+  <p>Estas condiciones están pensadas para negocios y profesionales que contratan Omyra para su actividad. Si contratas como consumidor, se aplican además los derechos que te reconoce el Código de Protección y Defensa del Consumidor (Ley 29571). <mark>[PENDIENTE: confirmar con el abogado el alcance para microempresas y si corresponde habilitar un Libro de Reclamaciones virtual]</mark></p>
+
+  <h2>3. Cómo se contrata</h2>
+  <p>Te das de alta en <a href="/empieza">omyra.pe/empieza</a>: indicas tus datos, los de tu negocio y los de tu comprobante, aceptas estas condiciones, el encargo del tratamiento y la política de privacidad, y pagas la primera mensualidad. El contrato queda celebrado cuando se confirma el pago. Después te enviamos tus accesos al correo que registraste.</p>
+
+  <h2>4. Precio</h2>
+  <ul>
+    <li><b>{pricing.launchShort}:</b> {pricing.price} {pricing.period}, {pricing.tax}.</li>
+    <li>Desde el día siguiente a esa fecha, el precio para las nuevas suscripciones es de {pricing.regularPrice} {pricing.period}, {pricing.tax}.</li>
+    <li>Quien se suscriba hasta el {pricing.launchUntil} mantiene {pricing.price} {pricing.period} mientras su suscripción siga activa sin interrupción.</li>
+    <li>Omyra no cobra comisiones por reserva ni por pago, ni costo de implementación. Las pasarelas de pago, Meta (WhatsApp) o los bancos pueden aplicar sus propias tarifas, independientes de Omyra.</li>
+    <li>Si en el futuro cambiara el precio de tu plan, te avisaremos por correo con al menos 30 días de anticipación, y podrás cancelar antes de que se aplique. <mark>[PENDIENTE: confirmar el plazo de aviso]</mark></li>
+  </ul>
+
+  <h2>5. Pago y renovación</h2>
+  <p>La suscripción es mensual y se paga por adelantado. Se renueva automáticamente cada mes, el mismo día en que contrataste, y el cobro se hace con el medio de pago que elegiste en la pasarela de pago. <mark>[PENDIENTE: nombre de la pasarela y medios de pago aceptados]</mark></p>
+  <p>Si un cobro no se puede completar, te avisaremos para que actualices tu medio de pago. Si no se regulariza en un plazo razonable, podremos suspender la cuenta hasta que se pague. <mark>[PENDIENTE: fijar el plazo]</mark></p>
+
+  <h2>6. Comprobantes de pago</h2>
+  <p>Por cada pago emitimos el comprobante de pago electrónico que corresponda conforme a las normas de la SUNAT: factura, si nos indicas un RUC, o boleta de venta, si nos indicas un DNI. Te lo enviamos al correo de tu cuenta. Revisa que los datos de tu comprobante sean correctos: los puedes cambiar escribiéndonos antes del siguiente cobro.</p>
+
+  <h2>7. Sin permanencia: cómo cancelar</h2>
+  <p>Puedes cancelar cuando quieras escribiéndonos a <a href={`mailto:${site.contact.legalEmail}`}>{site.contact.legalEmail}</a> <mark>[PENDIENTE: o desde la propia cuenta, cuando esté disponible]</mark>. La cancelación tiene efecto al final del mes ya pagado: hasta entonces sigues usando Omyra y no se te vuelve a cobrar. No devolvemos la parte del mes en curso, salvo que la ley lo exija.</p>
+  <p>Si cancelas y vuelves a contratar después del {pricing.launchUntil}, se aplica el precio vigente en ese momento.</p>
+
+  <h2>8. Tus datos y los de tus clientes</h2>
+  <p>Tratamos los datos de tu cuenta como titular del banco de datos, según la <a href="/privacidad">política de privacidad</a>. Los datos de los clientes de tu negocio son tuyos: Omyra los trata solo por tu encargo, como se explica en el <a href="/encargo-del-tratamiento">encargo del tratamiento</a>, que forma parte de estas condiciones.</p>
+  <p>Al terminar el servicio, puedes pedirnos una copia de tus datos. Después los suprimimos, salvo que una ley obligue a conservarlos. <mark>[PENDIENTE: plazo para pedir la copia]</mark></p>
+
+  <h2>9. Uso correcto y disponibilidad</h2>
+  <p>Te comprometes a usar Omyra de forma lícita, a custodiar tus contraseñas y a contar con el consentimiento de tus clientes cuando la ley lo exija. Procuramos que Omyra esté disponible de forma continua, pero puede haber interrupciones por mantenimiento o por causas ajenas a Omyra. Las avisaremos con antelación cuando sea posible.</p>
+
+  <h2>10. Responsabilidad</h2>
+  <p>Omyra responde de prestar el servicio con diligencia. No responde de los daños indirectos ni del uso que cada negocio haga de la plataforma. <mark>[PENDIENTE: límite de responsabilidad, a definir con el abogado]</mark></p>
+
+  <h2>11. Cambios en estas condiciones</h2>
+  <p>Si cambiamos estas condiciones, te avisaremos por correo antes de que se apliquen. Si no estás de acuerdo, puedes cancelar sin costo.</p>
+
+  <h2>12. Ley aplicable y reclamos</h2>
+  <p>Estas condiciones se rigen por las leyes de la República del Perú. Para cualquier duda o reclamo, escríbenos primero a <a href={`mailto:${site.contact.legalEmail}`}>{site.contact.legalEmail}</a>. Si no llegamos a un acuerdo, serán competentes los jueces y tribunales del Perú que correspondan, sin perjuicio de los derechos del consumidor ante el INDECOPI cuando sean aplicables.</p>
+</Legal>
+<style>
+  .draft { border-left-color: var(--brand-gold) !important; }
+  :global(.legal mark) { background: rgb(215 243 107 / .55); padding: 0 .2em; border-radius: 4px; }
+</style>
